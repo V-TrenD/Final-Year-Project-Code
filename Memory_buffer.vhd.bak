@@ -1,0 +1,4 @@
+
+entity Memory_buffer is
+	port(
+	);

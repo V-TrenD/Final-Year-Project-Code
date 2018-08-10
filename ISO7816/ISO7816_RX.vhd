@@ -1,0 +1,165 @@
+-------------------------------------------------------
+--! @file ISO7816_RX.vhd
+--! @brief Card Interface Connection
+-------------------------------------------------------
+
+--! Use standard library
+library ieee;
+--! Use logic elements
+		 use ieee.std_logic_1164.all;
+	 USE ieee.std_logic_arith.ALL;
+	 --use ieee.std_textio
+
+--! @brief THIS COMPONENT READS AND WRITES INFORMATION FROM THE CARD ON A LOWER LEVEL
+--! <h1>Pins</h1>
+--! 	IT IS CONNECTED TO THE CARD DIRECTLY AND CONTROLLED BY THE CARD LOGIC
+--! 	CONSISTS OF THE 8 PINS REQUIRED TO COMMUNICATE WITH THE CARD	
+--!
+--!	<h2>[VCC](@ref VCC_SEL)</h2>
+--!	Is connected to the Logic DC-DC conveter that is used to power and communicate with the cards. Allows for selection
+--! 	of card classes based on the value the value of VCC_SEL @link 
+--!
+--!	<h2>[CLK_OUT](@ref CLK_OUT)</h2>
+--!	Is controlled by the CardClockUnit. Outputs the clock frequency requested by the card in the set up phase.
+--!	The minimum clock frequency is 1MHz, during the set up phase. After this phase the actual clock frequency is doenoted
+--! 	<i>f</i>, which will be a programmable value between <i>f \in \[1MHz,5MHz\]</i>.
+--!	
+--!	Duty cycle of this clock pins output will be between \i 40% and \i 60%. This clock will only change
+--!	its frequency:	\n 
+--! 		- after completion of an answer to reset. \n
+--!		- after completion of a successful PPS exchange. \n
+
+
+--! ISO7816_RX entitys
+entity ISO7816_RX is
+    port ( --! Is controlled by the card cloc driver unit. Outputs the clock frequency requested by the card in the set up phase
+        CLK_IN   	: in  std_logic:='0'; --! Is the input clock. coorinates operations inside this unit
+		  EN			: in	std_logic:='0'; --!
+		  BUSY		: out	std_logic:='0';
+		  INFO		: out std_logic_vector(7 downto 0):="ZZZZZZZZ"; --!
+		  B			: out std_logic:='1';
+		  I_O			: in 	std_logic:='U' --!
+    );
+end entity;
+
+--! @brief Architecture definition of the ISO7816_RX
+--! @details More details about this mux element.
+architecture behavior of ISO7816_RX is
+	type PHASES is (START,START2,B0,B1,B2,B3,B4,B5,B6,B7,PARITY,STOP,ERROR,IDAL); --! state maching definition of transmission phase
+	signal CS: 		PHASES:=IDAL; 		--! current state of transmission
+	signal NS: 		PHASES:=START; 	--! nect state of transmission
+	SIGNAL count: 	integer:=0;			--!
+	signal temp: 	integer:=0;			--!
+	signal P: 		std_logic:='U'; 	--! Parity Bit coputation variable
+	signal DATA:	std_logic_vector(7 downto 0):="ZZZZZZZZ";	--!
+	signal force:	std_logic:='0';
+	signal DCOUNT:	integer:= 0;
+begin
+
+	
+
+	sync_proc: process(CLK_IN, NS, count, P)
+	
+	begin
+	
+		if EN = '0' then
+			CS <= IDAL;
+			count <= 0; 
+		elsif rising_edge(CLK_IN) then
+			count <= temp;
+			CS <= NS;
+		elsif falling_edge(CLK_IN) then
+			if CS = START and I_O = '0' then
+				force <= '1';
+			end if;
+		end if;
+--		if force = '1' then
+--			CS <= B0;
+--			force <= '0';
+--		end if;
+		
+--		if CS = PARITY and NS = STOP and NOT P = I_O then
+--			CS <= ERROR;
+--		end if;
+	end process sync_proc;
+	
+	--start_bit: process()
+
+	transmit: process(CS, DATA, I_O, count)
+	begin
+		temp <= count + 1;
+		case CS is
+			when IDAL 	=>
+				temp <= 0;
+				BUSY <= '0';
+				NS 	<= START;
+				B <= '1';
+			when START 	=>
+				-- send start bit for 2 clock events
+				if I_O = '0' then
+					BUSY 	<= '1';
+					NS 	<= B0;	
+					B 			<= '0';
+					--DATA 	<= "ZZZZZZZZ";
+				else
+					BUSY 	<= '0';
+					NS 	<= START;	
+					B 			<= '1';
+				end if;
+			when B0 		=>
+				BUSY 	<= '1';
+				DATA(DCOUNT)	<= I_O;
+				B <= DATA(DCOUNT);
+				NS 	<= B0;
+				if DCOUNT = 7 then
+					DCOUNT <= 0;
+					NS <= STOP;
+				end if;
+				DCOUNT <= DCOUNT + 1;
+			when B1 		=>
+				DATA(1)	<= I_O;
+				NS 		<= B2;
+				B <= '0';--DATA(0);
+			when B2 		=>
+				DATA(2) 	<= I_O;
+				NS 		<= B3;
+				B <= '1';--DATA(1);
+			when B3 		=>
+				DATA(3) 	<= I_O;
+				NS 		<= B4;
+				B <= '1';--DATA(2);
+			when B4 		=>
+				DATA(4) 	<= I_O;
+				NS 		<= B5;
+				B <= '0';--DATA(3);
+			when B5 		=>
+				DATA(5) 	<= I_O;
+				NS 		<= B6;
+				B <= '1';--DATA(4);
+			when B6 		=>
+				DATA(6) 	<= I_O;
+				NS 		<= B7;
+				B <= '0';--DATA(5);
+			when B7 		=>
+				DATA(7) 	<= I_O;
+				NS 		<= STOP;--PARITY;
+				B <= '1';--DATA(6);
+			when PARITY	=>
+				P 			<= I_O;	-- place I_O in high impedance state to prepare for reading
+				NS 		<= STOP;
+			when STOP	=>
+				INFO 		<= DATA;
+				NS 		<= IDAL;--IDAL;
+				BUSY 		<= '0';
+				B 			<= '1';--DATA(7);
+				report "There was input";
+			when ERROR  =>
+				NS 		<= IDAL;--IDAL;--ERROR;
+			when others =>
+				NS 		<= IDAL;--IDAL;
+		end case;
+	end process transmit;
+	
+
+	
+end architecture;

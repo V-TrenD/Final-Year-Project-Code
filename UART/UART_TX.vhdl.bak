@@ -1,0 +1,94 @@
+-- UART TRANSMIT
+-- BASED ON PIC18F45K20 EUSART MODULE
+-- by VUSUMUZI DUBE 	
+
+LIBRARY ieee;
+USE ieee.std_logic_1164.ALL;
+USE ieee.std_logic_unsigned.ALL;
+
+ENTITY UART_TX IS
+PORT (CLK		: IN std_logic;
+		GO			: IN std_logic;
+      EN  		: IN std_logic;
+      RESET  	: IN std_logic;
+      DATA   	: IN std_logic_vector(7 downto 0);
+      TX     	: OUT std_logic;
+      RDY  		: OUT std_logic);
+END UART_TX;
+
+ARCHITECTURE UART_TRANSMIT OF UART_TX IS
+	type PHASES is (START,B0,B1,B2,B3,B4,B5,B6,B7,PARITY,STOP,ERROR,IDAL);
+	signal CS: PHASES:=IDAL; 	--! current state of transmission
+	signal NS: PHASES:=IDAL; --! nect state of transmission
+	signal DATA_HOLD: std_logic_vector(7 downto 0);
+BEGIN
+	clock_sync:	process(CS,CLK,RESET)
+	begin
+		if RESET = '1' then
+			CS <= IDAL;
+		elsif rising_edge(CLK) then
+			CS <= NS;
+		end if;
+	end process clock_sync;
+	
+	transmit: process(CS)
+	begin
+		case CS is 
+			when IDAL 	=>
+				RDY <= '1';
+				TX <= '1';
+				if EN = '0' then
+					NS <= IDAL;
+				else
+					if GO = '0' then
+						NS <= IDAL;
+					else
+						DATA_HOLD <= DATA;
+						NS <= START;
+						RDY <= '0';
+					end if;
+				end if;
+			when START 	=> -- SEND START BIT
+				TX <= '0';
+				NS <= B0;
+			when B0 		=>
+				TX <=DATA_HOLD(0);
+				NS <= B1;
+			when B1 		=>
+				TX <=DATA_HOLD(1);
+				NS <= B2;
+			when B2 		=>
+				TX <=DATA_HOLD(2);
+				NS <= B3;
+			when B3 		=>
+				TX <=DATA_HOLD(3);
+				NS <= B4;
+			when B4 		=>
+				TX <=DATA_HOLD(4);
+				NS <= B5;
+			when B5 		=>
+				TX <=DATA_HOLD(5);
+				NS <= B6;
+			when B6 		=>
+				TX <=DATA_HOLD(6);
+				NS <= B7;
+			when B7 		=>
+				TX <=DATA_HOLD(7);
+				NS <= STOP;
+			when PARITY	=>
+				TX <=  	DATA_HOLD(7) xor DATA_HOLD(6) xor DATA_HOLD(5) xor DATA_HOLD(4) xor
+							DATA_HOLD(3) xor DATA_HOLD(2) xor DATA_HOLD(1) xor DATA_HOLD(0);	-- place TX in high impedance state to prepare for reading
+				NS <= STOP;
+			when STOP	=>
+				--if CLK = '0' then
+					TX <= '1';
+				--end if;
+				NS <= IDAL;
+			when ERROR  =>
+				NS <= ERROR;
+			when others =>
+				NS <= IDAL;
+		end case;
+	end process transmit;
+	
+END UART_TRANSMIT;

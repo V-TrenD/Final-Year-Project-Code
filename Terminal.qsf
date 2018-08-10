@@ -1,0 +1,113 @@
+# -------------------------------------------------------------------------- #
+#
+# Copyright (C) 1991-2013 Altera Corporation
+# Your use of Altera Corporation's design tools, logic functions 
+# and other software and tools, and its AMPP partner logic 
+# functions, and any output files from any of the foregoing 
+# (including device programming or simulation files), and any 
+# associated documentation or information are expressly subject 
+# to the terms and conditions of the Altera Program License 
+# Subscription Agreement, Altera MegaCore Function License 
+# Agreement, or other applicable license agreement, including, 
+# without limitation, that your use is for the sole purpose of 
+# programming logic devices manufactured by Altera and sold by 
+# Altera or its authorized distributors.  Please refer to the 
+# applicable agreement for further details.
+#
+# -------------------------------------------------------------------------- #
+#
+# Quartus II 64-Bit
+# Version 13.0.1 Build 232 06/12/2013 Service Pack 1 SJ Web Edition
+# Date created = 22:57:18  June 06, 2018
+#
+# -------------------------------------------------------------------------- #
+#
+# Notes:
+#
+# 1) The default values for assignments are stored in the file:
+#		Terminal_assignment_defaults.qdf
+#    If this file doesn't exist, see file:
+#		assignment_defaults.qdf
+#
+# 2) Altera recommends that you do not modify this file. This
+#    file is updated automatically by the Quartus II software
+#    and any changes you make may be lost or overwritten.
+#
+# -------------------------------------------------------------------------- #
+
+
+set_global_assignment -name FAMILY "Cyclone II"
+set_global_assignment -name DEVICE EP2C20F484C7
+set_global_assignment -name TOP_LEVEL_ENTITY Terminal
+set_global_assignment -name ORIGINAL_QUARTUS_VERSION "13.0 SP1"
+set_global_assignment -name PROJECT_CREATION_TIME_DATE "22:57:18  JUNE 06, 2018"
+set_global_assignment -name LAST_QUARTUS_VERSION "13.0 SP1"
+set_global_assignment -name PROJECT_OUTPUT_DIRECTORY output_files
+set_global_assignment -name MIN_CORE_JUNCTION_TEMP 0
+set_global_assignment -name MAX_CORE_JUNCTION_TEMP 85
+set_global_assignment -name DEVICE_FILTER_PACKAGE FBGA
+set_global_assignment -name DEVICE_FILTER_PIN_COUNT 484
+set_global_assignment -name DEVICE_FILTER_SPEED_GRADE 7
+set_global_assignment -name ERROR_CHECK_FREQUENCY_DIVISOR 1
+set_global_assignment -name EDA_SIMULATION_TOOL "ModelSim-Altera (VHDL)"
+set_global_assignment -name EDA_OUTPUT_DATA_FORMAT VHDL -section_id eda_simulation
+set_global_assignment -name STRATIX_DEVICE_IO_STANDARD "2.5 V"
+set_location_assignment PIN_B15 -to pin_name1
+set_location_assignment PIN_J20 -to F
+set_location_assignment PIN_L2 -to EN
+set_location_assignment PIN_L1 -to CLK
+set_location_assignment PIN_M2 -to DATA[7]
+set_location_assignment PIN_U11 -to DATA[6]
+set_location_assignment PIN_U12 -to DATA[5]
+set_location_assignment PIN_W12 -to DATA[4]
+set_location_assignment PIN_V12 -to DATA[3]
+set_location_assignment PIN_M22 -to DATA[2]
+set_location_assignment PIN_L21 -to DATA[1]
+set_location_assignment PIN_L22 -to DATA[0]
+set_location_assignment PIN_G12 -to TX
+set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
+set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
+set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
+set_location_assignment PIN_K20 -to RST
+set_location_assignment PIN_L18 -to VCC
+set_location_assignment PIN_M1 -to RESET
+set_location_assignment PIN_K21 -to I_O_IN
+set_location_assignment PIN_L19 -to CARDIF
+set_location_assignment PIN_K22 -to AUX1
+set_location_assignment PIN_J21 -to AUX2
+set_location_assignment PIN_J22 -to CARD_VCC
+set_location_assignment PIN_U22 -to LEDG_0
+set_location_assignment PIN_J18 -to CARD_GND
+set_location_assignment PIN_J19 -to CARD_Vpp
+set_global_assignment -name VHDL_FILE UART/UART_TX.vhdl
+set_global_assignment -name VHDL_FILE UART/UART_RX.vhd
+set_global_assignment -name VHDL_FILE UART/UART_MODs.vhdl
+set_global_assignment -name VHDL_FILE UART/UART.vhdl
+set_global_assignment -name VHDL_FILE UART/BAUDRATE.vhdl
+set_global_assignment -name BDF_FILE CD400.bdf
+set_global_assignment -name VHDL_FILE CardDriver.vhd
+set_global_assignment -name BDF_FILE Terminal.bdf
+set_global_assignment -name VHDL_FILE CardClockUnit.vhd
+set_global_assignment -name SMF_FILE CU_DEF.smf
+set_global_assignment -name QIP_FILE lpm_compare0.qip
+set_global_assignment -name QIP_FILE lpm_counter0.qip
+set_global_assignment -name BSF_FILE CD400.bsf
+set_global_assignment -name VHDL_FILE ATR.vhd
+set_global_assignment -name VHDL_FILE ISO7816_RX.vhd
+set_global_assignment -name VHDL_FILE ISO7816_TX.vhd
+set_global_assignment -name VHDL_FILE Clock1MHz.vhd
+set_global_assignment -name QIP_FILE ramlpm.qip
+set_global_assignment -name MIF_FILE Terminal.mif
+set_location_assignment PIN_D12 -to CLK_IN_27MHz
+set_location_assignment PIN_U18 -to LEDR[7]
+set_location_assignment PIN_Y18 -to LEDR[6]
+set_location_assignment PIN_V19 -to LEDR[5]
+set_location_assignment PIN_T18 -to LEDR[4]
+set_location_assignment PIN_Y19 -to LEDR[3]
+set_location_assignment PIN_U19 -to LEDR[2]
+set_location_assignment PIN_R19 -to LEDR[1]
+set_location_assignment PIN_R20 -to LEDR[0]
+set_global_assignment -name VHDL_FILE Controller.vhdl
+set_location_assignment PIN_A13 -to SAMPLE
+set_global_assignment -name VHDL_FILE Memory_buffer.vhd
+set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

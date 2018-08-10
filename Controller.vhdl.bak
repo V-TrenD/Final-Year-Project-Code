@@ -1,0 +1,107 @@
+--! Comunication Controller
+--! Vusumuzi Dube
+
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.std_logic_arith.all;
+
+entity Controller is
+	port(
+		CLK	: in 	std_logic;
+		GO		: in 	std_logic;
+		SEND	: out std_logic;
+		
+		STDIN : IN	std_logic_vector(7 downto 0);
+		STDOUT: OUT std_logic_vector(7 downto 0)
+	);
+end entity;
+
+architecture Sync of Controller is
+	
+	signal 	FIFO				:	std_logic_vector(7 downto 0);
+	signal 	count,nextC		:	integer:=0;
+	signal	STATE				: 	integer:=1;
+	signal 	SB 				:	std_logic:='0';
+	signal 	SEND_BIT			:	std_logic:='0';
+	signal	MESSAGE			:	string:="Vusumuzi Dube; U13221796@ASN";
+begin
+	
+	clk_sync :process(CLK, GO)
+	begin
+		if rising_edge(CLK) then
+			count <= count + 1;
+			if  count < 10 then
+				STATE <= nextC;
+			elsif count > 10 and count < 20 then
+				SEND_BIT <= '1';
+			elsif count > 20 and count < 40 then
+				SEND_BIT <= '0';
+			elsif count > 50 then
+				count <= 0;
+			end if;
+		end if;
+	end process clk_sync;
+
+	transmit_message: process(GO)
+	begin
+		if rising_edge(GO) then
+			case STATE is
+				when 1 	=>
+					STDOUT <= CONV_STD_LOGIC_VECTOR(character'pos('T'),8);
+					nextC <= 2; 
+				when 2	=>
+					STDOUT <= CONV_STD_LOGIC_VECTOR(character'pos('h'),8);
+				--	SEND <= '1';
+					nextC <= 3;
+				when 3	=>
+					STDOUT <= CONV_STD_LOGIC_VECTOR(character'pos('a'),8);
+				-- SEND <= '1';
+					nextC <= 4;
+				when 4	=>
+					STDOUT <= CONV_STD_LOGIC_VECTOR(character'pos('n'),8);
+				--	SEND <= '1';
+					nextC <= 5;
+				when 5	=>
+					STDOUT <= CONV_STD_LOGIC_VECTOR(character'pos('k'),8);
+				--	SEND <= '1';$
+					nextC <= 6;
+				when 6 	=>
+					STDOUT <= CONV_STD_LOGIC_VECTOR(character'pos(' '),8);
+					nextC <= 7; 
+				when 7	=>
+					STDOUT <= CONV_STD_LOGIC_VECTOR(character'pos('Y'),8);
+				--	SEND <= '1';
+					nextC <= 8;
+				when 8	=>
+					STDOUT <= CONV_STD_LOGIC_VECTOR(character'pos('o'),8);
+				-- SEND <= '1';
+					nextC <= 9;
+				when 9	=>
+					STDOUT <= CONV_STD_LOGIC_VECTOR(character'pos('u'),8);
+				--	SEND <= '1';
+					nextC <= 10;
+				when 10	=>
+					STDOUT <= CONV_STD_LOGIC_VECTOR(character'pos('!'),8);
+				--	SEND <= '1';$
+					nextC <= 11;
+				when 11	=>
+					STDOUT <= X"0A";
+				--	SEND <= '1';
+					nextC <= 12;
+				when 12	=>
+					STDOUT <= X"0D";
+				--	SEND <= '1';
+					nextC <= 13;
+				when others =>
+					STDOUT <= X"00";
+					--SEND <= '0';
+					--SEND_BIT <= '0';
+					nextC <= 1;
+			end case;
+			--SEND_BIT <= '1';
+		end if;
+	end process transmit_message;
+	
+	SEND <= SEND_BIT;
+
+end architecture;

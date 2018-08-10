@@ -1,0 +1,174 @@
+-------------------------------------------------------
+--! @file ATR.vhd
+--! @brief Card Interface Connection
+-------------------------------------------------------
+
+--! Use standard library
+library ieee;
+--! Use logic elements
+    use ieee.std_logic_1164.all;
+	 USE ieee.std_logic_arith.ALL;
+	 
+--! CardClockUnit entity
+entity ATR is
+    port (
+			CARD		: in 		std_logic:='0'; --! Card detection, physical check for a card
+			CLK_OUT  : out  	std_logic:='0'; --! Is controlled by the card cloc driver unit. Outputs the clock frequency requested by the card in the set up phase
+			CLK_IN   : in  	std_logic:='0'; --! Is the input clock. coorinates operations inside this unit Expects 40MHz Norminal
+			CARD_VCC	: out		std_logic:='0'; --! Enables Power on the card
+			CARD_RST	: out		std_logic:='0'; --! Enables the reset line of the card
+			CARD_IN	: in 		std_logic_vector(7 downto 0):="LLLLLLLL"; --! allows the clock signal to be output according to the programed count
+			CARD_OUT	: out 	std_logic_vector(7 downto 0):="ZZZZZZZZ";--! uesd to program the frequency
+			DATA_EN	: out		std_logic:='0'; --! enables reading and writing
+			DATA_RW	: out		std_logic:='0'; --! informs of read or write
+			RXIF		: in		std_logic:='0'; --! Informs that a new charecter can be read
+			TXIF		: in		std_logic:='0' --! Informs that a new charecter can be written
+    );
+end entity;
+
+--! @brief Architecture definition of the CardClockUnit
+--! @details More details about this mux element.
+architecture behavior of ATR is
+	type ATR_SEQUENCE is (IDAL ,POWER, CLKWAIT, CLOCK, DELAY4K, RESET, READATR, ATR_FAIL);
+	signal CS: 				ATR_SEQUENCE:= IDAL;
+	signal NS: 				ATR_SEQUENCE:= IDAL;
+	signal count: 			integer:=0; --! keeps track of the internal state count
+	signal cmp:				integer:= 0;
+	signal trigger:		std_logic:='0';
+	signal CLK_EN:			std_logic:='0';
+	signal CLK:				std_logic:='0';
+	signal ATR_RESPONSE:	std_logic:='0';
+	signal DIV:				integer:=0;
+begin
+
+	sync_proc: process(CLK_IN, NS)
+	
+	begin
+		if rising_edge(CLK_IN) then
+			if DIV >= 4 then
+				DIV <= 0;
+				CLK <= not CLK;
+			else
+				DIV <= DIV + 1;
+			end if;
+			CS <= NS;
+			if cmp = 0 then
+				trigger <= '0';
+				count <= 0;
+			elsif cmp >= count then
+				count <= count+1;
+				trigger <= '0';
+			else
+				trigger <= '1';
+			end if;
+		end if;
+	end process sync_proc;
+
+	process(CS, count, CARD, trigger)
+	
+	begin
+		case CS is
+			when	IDAL 	=>
+			------------------------------------------
+			--!
+			------------------------------------------
+				CARD_VCC	<= '0';
+				CARD_RST <= '0';
+				CARD_OUT	<= "ZZZZZZZZ";
+				DATA_EN	<= '0';
+				DATA_RW	<= '0';
+				if CARD ='1' then
+					NS <= POWER;
+				end if;
+			when POWER	=>
+			------------------------------------------
+			--!
+			------------------------------------------
+			CLK_EN 	<= '0';
+			CARD_RST <= '0';
+			CARD_OUT	<= "ZZZZZZZZ";
+			DATA_EN	<= '0';
+			DATA_RW	<= '0';
+				if trigger ='1' then
+					-- turn on power and release timer
+					CARD_VCC	<= '1';
+					NS 		<= CLKWAIT;
+					cmp 		<= 0;
+				else
+					-- wait to turn on power
+					CLK_EN 	<= '0';
+					CARD_VCC	<= '0';
+					cmp <= 40000;
+				end if;
+				
+			when CLKWAIT =>
+			------------------------------------------
+			--!
+			------------------------------------------
+				if trigger ='1' then
+					NS 		<= CLOCK;
+					cmp 		<= 0;
+				else
+					cmp 		<= 10000;
+				end if;
+			when CLOCK	=>
+			------------------------------------------
+			--!
+			------------------------------------------
+				CLK_EN <= '1';
+				CARD_RST <= '0';
+				CARD_OUT	<= "ZZZZZZZZ";
+				DATA_EN	<= '0';
+				DATA_RW	<= '0';
+				NS 		<= DELAY4K;
+			when DELAY4K	=>
+			------------------------------------------
+			--!
+			------------------------------------------
+				CLK_EN <= '1';
+				if trigger ='1' then
+					NS 		<= RESET;
+					cmp 		<= 0;
+				else
+					cmp 		<= 40000;
+				end if;
+			when RESET =>
+			------------------------------------------
+			--!
+			------------------------------------------
+				CLK_EN <= '1';
+				CARD_RST <= '1';
+				CARD_OUT	<= "ZZZZZZZZ";
+				DATA_EN	<= '1';
+				DATA_RW	<= '0';
+				if trigger ='1' then
+					NS 		<= READATR;
+					cmp 		<= 0;
+				else
+					cmp 		<= 400;
+				end if;
+			when READATR =>
+				CLK_EN <= '1';
+				if trigger ='1' and not ATR_RESPONSE = '1' then
+					--NS 		<= ATR_FAIL;
+					cmp 		<= 0;
+				else
+					cmp 		<= 40000;
+				end if;
+			when others =>
+				if CARD ='0' then
+					NS <= POWER;
+				end if;
+		end case;
+
+	end process;
+	
+	process(CARD_IN)
+	begin
+	if CS = READATR then
+		
+	end if;
+	end process;
+	
+	CLK_OUT 	<= CLK_EN and CLK_IN;
+end architecture;
