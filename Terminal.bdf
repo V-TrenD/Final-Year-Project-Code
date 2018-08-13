@@ -158,7 +158,7 @@ applicable agreement for further details.
 )
 (pin
 	(output)
-	(rect 976 -312 992 -136)
+	(rect 712 -288 728 -112)
 	(text "OUTPUT" (rect 6 1 16 39)(font "Arial" (font_size 6))(vertical))
 	(text "TX" (rect 4 90 16 101)(font "Arial" )(vertical))
 	(pt 8 0)
@@ -172,7 +172,7 @@ applicable agreement for further details.
 		(line (pt 4 78)(pt 8 82))
 	)
 	(rotate270)
-	(annotation_block (location)(rect 992 -136 1048 -120))
+	(annotation_block (location)(rect 728 -112 784 -96))
 )
 (pin
 	(output)
@@ -335,7 +335,7 @@ applicable agreement for further details.
 	(output)
 	(rect -176 -312 0 -296)
 	(text "OUTPUT" (rect 137 0 175 10)(font "Arial" (font_size 6)))
-	(text "HEX3[6..0]" (rect 5 0 58 12)(font "Arial" ))
+	(text "HEX1[6..0]" (rect 33 0 86 12)(font "Arial" ))
 	(pt 176 8)
 	(drawing
 		(line (pt 176 8)(pt 124 8))
@@ -347,13 +347,13 @@ applicable agreement for further details.
 		(line (pt 98 12)(pt 94 8))
 	)
 	(flipy)
-	(annotation_block (location)(rect 0 -296 48 -280))
+	(annotation_block (location)(rect -8 -336 40 -320))
 )
 (pin
 	(output)
 	(rect -176 -296 0 -280)
 	(text "OUTPUT" (rect 137 0 175 10)(font "Arial" (font_size 6)))
-	(text "HEX2[6..0]" (rect 5 0 58 12)(font "Arial" ))
+	(text "HEX0[6..0]" (rect 33 0 86 12)(font "Arial" ))
 	(pt 176 8)
 	(drawing
 		(line (pt 176 8)(pt 124 8))
@@ -365,13 +365,13 @@ applicable agreement for further details.
 		(line (pt 98 12)(pt 94 8))
 	)
 	(flipy)
-	(annotation_block (location)(rect 0 -280 56 -264))
+	(annotation_block (location)(rect 0 -280 48 -264))
 )
 (pin
 	(output)
-	(rect 816 -72 992 -56)
+	(rect 808 -72 984 -56)
 	(text "OUTPUT" (rect 1 0 39 10)(font "Arial" (font_size 6)))
-	(text "HEX1[6..0]" (rect 90 0 143 12)(font "Arial" ))
+	(text "HEX3[6..0]" (rect 118 0 171 12)(font "Arial" ))
 	(pt 0 8)
 	(drawing
 		(line (pt 0 8)(pt 52 8))
@@ -382,13 +382,13 @@ applicable agreement for further details.
 		(line (pt 82 8)(pt 78 12))
 		(line (pt 78 12)(pt 82 8))
 	)
-	(annotation_block (location)(rect 992 -56 1040 -40))
+	(annotation_block (location)(rect 984 -88 1032 -72))
 )
 (pin
 	(output)
-	(rect 816 -56 992 -40)
+	(rect 808 -56 984 -40)
 	(text "OUTPUT" (rect 1 0 39 10)(font "Arial" (font_size 6)))
-	(text "HEX0[6..0]" (rect 90 0 143 12)(font "Arial" ))
+	(text "HEX2[6..0]" (rect 118 0 171 12)(font "Arial" ))
 	(pt 0 8)
 	(drawing
 		(line (pt 0 8)(pt 52 8))
@@ -399,7 +399,7 @@ applicable agreement for further details.
 		(line (pt 82 8)(pt 78 12))
 		(line (pt 78 12)(pt 82 8))
 	)
-	(annotation_block (location)(rect 992 -40 1040 -24))
+	(annotation_block (location)(rect 984 -40 1040 -24))
 )
 (pin
 	(bidir)
@@ -2133,16 +2133,6 @@ applicable agreement for further details.
 	(bus)
 )
 (connector
-	(pt 32 -304)
-	(pt 0 -304)
-	(bus)
-)
-(connector
-	(pt 0 -288)
-	(pt 32 -288)
-	(bus)
-)
-(connector
 	(pt 288 -288)
 	(pt 232 -288)
 	(bus)
@@ -2245,20 +2235,6 @@ applicable agreement for further details.
 	(pt 760 -416)
 )
 (connector
-	(pt 720 -384)
-	(pt 720 -360)
-)
-(connector
-	(pt 776 -64)
-	(pt 816 -64)
-	(bus)
-)
-(connector
-	(pt 776 -48)
-	(pt 816 -48)
-	(bus)
-)
-(connector
 	(pt 264 -304)
 	(pt 264 -64)
 	(bus)
@@ -2269,16 +2245,36 @@ applicable agreement for further details.
 	(bus)
 )
 (connector
-	(pt 984 -312)
-	(pt 984 -384)
-)
-(connector
 	(pt 936 -384)
-	(pt 984 -384)
+	(pt 1120 -384)
 )
 (connector
-	(pt 984 -384)
-	(pt 1120 -384)
+	(pt 720 -384)
+	(pt 720 -360)
+)
+(connector
+	(pt 720 -360)
+	(pt 720 -288)
+)
+(connector
+	(pt 776 -64)
+	(pt 808 -64)
+	(bus)
+)
+(connector
+	(pt 776 -48)
+	(pt 808 -48)
+	(bus)
+)
+(connector
+	(pt 32 -304)
+	(pt 0 -304)
+	(bus)
+)
+(connector
+	(pt 32 -288)
+	(pt 0 -288)
+	(bus)
 )
 (junction (pt 248 232))
 (junction (pt 624 -544))
@@ -2302,4 +2298,4 @@ applicable agreement for further details.
 (junction (pt 304 -528))
 (junction (pt 584 -400))
 (junction (pt 736 -416))
-(junction (pt 984 -384))
+(junction (pt 720 -360))

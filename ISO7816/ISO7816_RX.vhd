@@ -55,6 +55,7 @@ architecture behavior of ISO7816_RX is
 	signal DATA:	std_logic_vector(7 downto 0):="00000000";	--!
 	signal force:	std_logic:='0';
 	signal DCOUNT:	integer:= 0;
+	signal FREEZE: std_logic;
 begin
 
 	clock:	process(CLK_IN,I_O,CS)
@@ -65,15 +66,15 @@ begin
 	elsif falling_edge(CLK_IN) then
 		
 	end if;
-	if I_O = 'L' and CS=START then
-		force <= '1';
-	elsif CS=B0 then
-		force <= '0';
-	end if;
+--	if I_O = '0' and CS=START then
+--			force <= '1';
+--		elsif CS=B0 then
+--			force <= '0';
+--		end if;
 	
 	end process clock;
 	
-	sync_proc: process(CLK,EN, NS, force)
+	sync_proc: process(CLK,EN, NS, force, I_O)
 	
 	begin
 		--count <= count + 1;
@@ -90,7 +91,7 @@ begin
 					DCOUNT <= 0;
 				end if;
 			elsif falling_edge(CLK) then
-				
+				FREEZE <= I_O;
 			end if;
 		end if;
 		
@@ -105,7 +106,7 @@ begin
 --
 --	end process start_bit;
 
-	transmit: process(CS, DCOUNT)
+	transmit: process(CS, DCOUNT, I_O)
 		variable TEMP: integer:=-1;
 	begin
 		case CS is
@@ -117,15 +118,22 @@ begin
 				-- send start bit for 2 clock events
 				BUSY 	<= '0';
 				B 		<= '1';
---				if I_O='0' then
---					--BUSY 	<= '1';
---					NS 	<= B0;	
---					B 			<= '0';
---					--DATA 	<= "ZZZZZZZZ";
---				else
---					NS 	<= START;	
---					B 			<= '1';
---				end if;
+				if I_O='0' then
+					--BUSY 	<= '1';
+					if CLK_IN='1' then
+						NS 	<= START2; 
+					else
+						NS <= B0;	
+					end if;
+					--B 			<= '0';
+					--DATA 	<= "ZZZZZZZZ";
+				else
+					NS 	<= START;	
+					B 			<= '1';
+				end if;
+			when START2 =>
+				NS 	<= B0;	
+				B 			<= '0';
 			when B0 		=>
 				BUSY 	<= '1';
 				if DCOUNT > 7 then
@@ -133,7 +141,7 @@ begin
 					TEMP:=-1;
 				else
 					if not (TEMP=DCOUNT) then
-						DATA(DCOUNT)	<= I_O;
+						DATA(DCOUNT)	<= FREEZE;--I_O;
 						B 		<= DATA(DCOUNT);
 						NS 	<= B0;
 						TEMP:=DCOUNT;
