@@ -36,7 +36,7 @@ entity ISO7816_RX is
         CLK_IN   	: in  std_logic:='0'; --! Is the input clock. coorinates operations inside this unit
 		  EN			: in	std_logic:='0'; --!
 		  BUSY		: out	std_logic:='0';
-		  INFO		: out std_logic_vector(7 downto 0):="ZZZZZZZZ"; --!
+		  INFO		: out std_logic_vector(7 downto 0):="00000000"; --!
 		  B			: out std_logic:='1';
 		  I_O			: in 	std_logic:='U' --!
     );
@@ -45,121 +45,117 @@ end entity;
 --! @brief Architecture definition of the ISO7816_RX
 --! @details More details about this mux element.
 architecture behavior of ISO7816_RX is
-	type PHASES is (START,START2,B0,B1,B2,B3,B4,B5,B6,B7,PARITY,STOP,ERROR,IDAL); --! state maching definition of transmission phase
+	type PHASES is (START,START2,B0,PARITY,STOP,ERROR,IDAL); --! state maching definition of transmission phase
 	signal CS: 		PHASES:=IDAL; 		--! current state of transmission
 	signal NS: 		PHASES:=START; 	--! nect state of transmission
+	signal CLK:		std_logic:='0';	--!
 	SIGNAL count: 	integer:=0;			--!
 	signal temp: 	integer:=0;			--!
 	signal P: 		std_logic:='U'; 	--! Parity Bit coputation variable
-	signal DATA:	std_logic_vector(7 downto 0):="ZZZZZZZZ";	--!
+	signal DATA:	std_logic_vector(7 downto 0):="00000000";	--!
 	signal force:	std_logic:='0';
 	signal DCOUNT:	integer:= 0;
 begin
 
+	clock:	process(CLK_IN,I_O,CS)
+	begin 
+	if 	rising_edge(CLK_IN) then 
+		CLK <= not CLK;
+		
+	elsif falling_edge(CLK_IN) then
+		
+	end if;
+	if I_O = 'L' and CS=START then
+		force <= '1';
+	elsif CS=B0 then
+		force <= '0';
+	end if;
 	
-
-	sync_proc: process(CLK_IN, NS, count, P)
+	end process clock;
+	
+	sync_proc: process(CLK,EN, NS, force)
 	
 	begin
-	
+		--count <= count + 1;
 		if EN = '0' then
 			CS <= IDAL;
-			count <= 0; 
-		elsif rising_edge(CLK_IN) then
-			count <= temp;
-			CS <= NS;
-		elsif falling_edge(CLK_IN) then
-			if CS = START and I_O = '0' then
-				force <= '1';
+		else
+			if force='1' then
+				CS <= B0;
+			elsif rising_edge(CLK) then
+				CS <= NS;
+				if CS = B0 then
+					DCOUNT <= DCOUNT + 1;
+				else
+					DCOUNT <= 0;
+				end if;
+			elsif falling_edge(CLK) then
+				
 			end if;
 		end if;
---		if force = '1' then
---			CS <= B0;
---			force <= '0';
---		end if;
 		
 --		if CS = PARITY and NS = STOP and NOT P = I_O then
 --			CS <= ERROR;
 --		end if;
 	end process sync_proc;
-	
-	--start_bit: process()
+--	
+--	start_bit: process(I_O)
+--	
+--	begin
+--
+--	end process start_bit;
 
-	transmit: process(CS, DATA, I_O, count)
+	transmit: process(CS, DCOUNT)
+		variable TEMP: integer:=-1;
 	begin
-		temp <= count + 1;
 		case CS is
 			when IDAL 	=>
-				temp <= 0;
-				BUSY <= '0';
+				BUSY 	<= '1';
 				NS 	<= START;
-				B <= '1';
+				B 		<= '1';
 			when START 	=>
 				-- send start bit for 2 clock events
-				if I_O = '0' then
-					BUSY 	<= '1';
-					NS 	<= B0;	
-					B 			<= '0';
-					--DATA 	<= "ZZZZZZZZ";
-				else
-					BUSY 	<= '0';
-					NS 	<= START;	
-					B 			<= '1';
-				end if;
+				BUSY 	<= '0';
+				B 		<= '1';
+--				if I_O='0' then
+--					--BUSY 	<= '1';
+--					NS 	<= B0;	
+--					B 			<= '0';
+--					--DATA 	<= "ZZZZZZZZ";
+--				else
+--					NS 	<= START;	
+--					B 			<= '1';
+--				end if;
 			when B0 		=>
 				BUSY 	<= '1';
-				DATA(DCOUNT)	<= I_O;
-				B <= DATA(DCOUNT);
-				NS 	<= B0;
-				if DCOUNT = 7 then
-					DCOUNT <= 0;
+				if DCOUNT > 7 then
 					NS <= STOP;
+					TEMP:=-1;
+				else
+					if not (TEMP=DCOUNT) then
+						DATA(DCOUNT)	<= I_O;
+						B 		<= DATA(DCOUNT);
+						NS 	<= B0;
+						TEMP:=DCOUNT;
+					end if;
 				end if;
-				DCOUNT <= DCOUNT + 1;
-			when B1 		=>
-				DATA(1)	<= I_O;
-				NS 		<= B2;
-				B <= '0';--DATA(0);
-			when B2 		=>
-				DATA(2) 	<= I_O;
-				NS 		<= B3;
-				B <= '1';--DATA(1);
-			when B3 		=>
-				DATA(3) 	<= I_O;
-				NS 		<= B4;
-				B <= '1';--DATA(2);
-			when B4 		=>
-				DATA(4) 	<= I_O;
-				NS 		<= B5;
-				B <= '0';--DATA(3);
-			when B5 		=>
-				DATA(5) 	<= I_O;
-				NS 		<= B6;
-				B <= '1';--DATA(4);
-			when B6 		=>
-				DATA(6) 	<= I_O;
-				NS 		<= B7;
-				B <= '0';--DATA(5);
-			when B7 		=>
-				DATA(7) 	<= I_O;
-				NS 		<= STOP;--PARITY;
-				B <= '1';--DATA(6);
 			when PARITY	=>
 				P 			<= I_O;	-- place I_O in high impedance state to prepare for reading
 				NS 		<= STOP;
 			when STOP	=>
 				INFO 		<= DATA;
-				NS 		<= IDAL;--IDAL;
-				BUSY 		<= '0';
-				B 			<= '1';--DATA(7);
+				if I_O='1' then
+					NS 		<= START;--IDAL;
+					B 			<= '1';--DATA(7);
+					BUSY 		<= '0';
+				end if;
 				report "There was input";
 			when ERROR  =>
-				NS 		<= IDAL;--IDAL;--ERROR;
+				NS 		<= START;--IDAL;--ERROR;
 			when others =>
-				NS 		<= IDAL;--IDAL;
+				NS 		<= START;--IDAL;
 		end case;
 	end process transmit;
-	
 
 	
 end architecture;
