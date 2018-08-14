@@ -333,7 +333,7 @@ applicable agreement for further details.
 )
 (pin
 	(output)
-	(rect -176 -312 0 -296)
+	(rect -176 -296 0 -280)
 	(text "OUTPUT" (rect 137 0 175 10)(font "Arial" (font_size 6)))
 	(text "HEX1[6..0]" (rect 33 0 86 12)(font "Arial" ))
 	(pt 176 8)
@@ -347,11 +347,11 @@ applicable agreement for further details.
 		(line (pt 98 12)(pt 94 8))
 	)
 	(flipy)
-	(annotation_block (location)(rect -8 -336 40 -320))
+	(annotation_block (location)(rect -8 -320 40 -304))
 )
 (pin
 	(output)
-	(rect -176 -296 0 -280)
+	(rect -176 -280 0 -264)
 	(text "OUTPUT" (rect 137 0 175 10)(font "Arial" (font_size 6)))
 	(text "HEX0[6..0]" (rect 33 0 86 12)(font "Arial" ))
 	(pt 176 8)
@@ -365,7 +365,7 @@ applicable agreement for further details.
 		(line (pt 98 12)(pt 94 8))
 	)
 	(flipy)
-	(annotation_block (location)(rect 0 -280 48 -264))
+	(annotation_block (location)(rect 0 -264 48 -248))
 )
 (pin
 	(output)
@@ -1372,7 +1372,7 @@ applicable agreement for further details.
 	(rotate180)
 )
 (symbol
-	(rect 32 -336 224 -256)
+	(rect 32 -320 224 -240)
 	(text "bcd" (rect 170 0 187 12)(font "Arial" ))
 	(text "inst33" (rect 155 64 184 76)(font "Arial" ))
 	(port
@@ -1785,11 +1785,6 @@ applicable agreement for further details.
 	(pt 1152 576)
 )
 (connector
-	(pt 536 -424)
-	(pt 536 -400)
-	(bus)
-)
-(connector
 	(pt 1120 -600)
 	(pt 1120 -384)
 )
@@ -1914,11 +1909,6 @@ applicable agreement for further details.
 	(pt -296 -528)
 )
 (connector
-	(pt 288 -576)
-	(pt 288 -424)
-	(bus)
-)
-(connector
 	(pt 584 -328)
 	(pt 632 -328)
 	(bus)
@@ -2029,21 +2019,6 @@ applicable agreement for further details.
 	(bus)
 )
 (connector
-	(pt 336 -384)
-	(pt 336 -424)
-	(bus)
-)
-(connector
-	(pt 536 -424)
-	(pt 336 -424)
-	(bus)
-)
-(connector
-	(pt 336 -424)
-	(pt 288 -424)
-	(bus)
-)
-(connector
 	(pt -296 -512)
 	(pt -312 -512)
 )
@@ -2133,21 +2108,6 @@ applicable agreement for further details.
 	(bus)
 )
 (connector
-	(pt 288 -288)
-	(pt 232 -288)
-	(bus)
-)
-(connector
-	(pt 232 -288)
-	(pt 232 -304)
-	(bus)
-)
-(connector
-	(pt 232 -304)
-	(pt 224 -304)
-	(bus)
-)
-(connector
 	(pt 288 -304)
 	(pt 264 -304)
 	(bus)
@@ -2198,11 +2158,6 @@ applicable agreement for further details.
 (connector
 	(pt 584 -400)
 	(pt 584 -328)
-	(bus)
-)
-(connector
-	(pt 536 -400)
-	(pt 584 -400)
 	(bus)
 )
 (connector
@@ -2267,13 +2222,63 @@ applicable agreement for further details.
 	(bus)
 )
 (connector
-	(pt 32 -304)
-	(pt 0 -304)
+	(pt 224 -288)
+	(pt 288 -288)
 	(bus)
 )
 (connector
-	(pt 32 -288)
+	(pt 0 -272)
+	(pt 32 -272)
+	(bus)
+)
+(connector
 	(pt 0 -288)
+	(pt 32 -288)
+	(bus)
+)
+(connector
+	(pt 288 -320)
+	(pt -296 -320)
+	(bus)
+)
+(connector
+	(pt -296 -320)
+	(pt -296 -296)
+	(bus)
+)
+(connector
+	(pt -296 -296)
+	(pt -608 -296)
+	(bus)
+)
+(connector
+	(pt -608 -296)
+	(pt -608 -344)
+	(bus)
+)
+(connector
+	(pt -608 -344)
+	(pt -600 -344)
+	(bus)
+)
+(connector
+	(pt 336 -400)
+	(pt 336 -384)
+	(bus)
+)
+(connector
+	(pt 288 -576)
+	(pt 288 -400)
+	(bus)
+)
+(connector
+	(pt 288 -400)
+	(pt 336 -400)
+	(bus)
+)
+(connector
+	(pt 336 -400)
+	(pt 584 -400)
 	(bus)
 )
 (junction (pt 248 232))
@@ -2292,10 +2297,10 @@ applicable agreement for further details.
 (junction (pt -872 -528))
 (junction (pt 584 -328))
 (junction (pt -176 -368))
-(junction (pt 336 -424))
 (junction (pt 592 -440))
 (junction (pt -88 -512))
 (junction (pt 304 -528))
 (junction (pt 584 -400))
 (junction (pt 736 -416))
 (junction (pt 720 -360))
+(junction (pt 336 -400))
