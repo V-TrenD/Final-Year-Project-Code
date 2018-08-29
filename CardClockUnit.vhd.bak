@@ -36,9 +36,6 @@ entity CardClockUnit is
     port (
         CLK_OUT   : out  	std_logic:='0'; --! Is controlled by the card cloc driver unit. Outputs the clock frequency requested by the card in the set up phase
         CLK_IN   	: in  	std_logic:='0'; --! Is the input clock. coorinates operations inside this unit Expects 40MHz Norminal
-		  CLK_27MHz : in  	std_logic:='0';
-		  CLK_24MHz : in  	std_logic:='0';
-		  CLK_50MHz : in  	std_logic:='0';
 		  EN			: in 		std_logic:='1'; --! allows the clock signal to be output according to the programed count
 		  Fi_Di		: in 		std_logic_vector(7 downto 0)--! uesd to program the frequency
     );
@@ -51,7 +48,6 @@ architecture behavior of CardClockUnit is
 	signal	Di		: integer 	:= 1; 	--! Baud Rate Adjustment Integer
 	signal 	CLK	: std_logic := '0'; 	--! Clock Hold Variable
 	signal 	f 		: integer	:= 5;		--! clock frequency role over for 5Mhz
-	signal 	CLK_S	: std_logic	:= '0';	--!
 begin
 
 	change_frequency: process (EN, Fi_Di) -- 
@@ -61,12 +57,12 @@ begin
 			-- Set up the clock rate conversion integer Fi
 			temp := Fi_Di(7 downto 4);
 			case temp is										-- CLK IN is expected to be a 40MHz ossilator
-				when "0000" => Fi <= 372; 	f <= 7;	--20;		-- 4MHz	-- 24MHz clock
-				when "0001" =>	Fi <= 372; 	f <= 5;	--16;		-- 5MHz  -- 50MHz clock
-				when "0010" =>	Fi <= 558;	f <= 4;	--13 ;	-- 6MHz 	-- 24MHz clock
-				when "0011" =>	Fi <= 744;	f <= 3;	--10;		-- 8MHz  -- 50MHz clock
-				when "0100" =>	Fi <= 1116;	f <= 1;	--7;		-- 12MHz  -- 24MHz clock
-				when "0101" =>	Fi <= 1488;	f <= 2;		-- 16MHz
+				when "0000" => Fi <= 372; 	f <= 25;	--20;		-- 4MHz
+				when "0001" =>	Fi <= 372; 	f <= 5;	--16;		-- 5MHz
+				when "0010" =>	Fi <= 558;	f <= 4;	--13 ;	-- 6MHz
+				when "0011" =>	Fi <= 744;	f <= 3;	--10;		-- 8MHz
+				when "0100" =>	Fi <= 1116;	f <= 2;	--7;		-- 12MHz
+				when "0101" =>	Fi <= 1488;	f <= 5;		-- 16MHz
 				when "0110" =>	Fi <= 1860;	f <= 4;		-- 20MHz
 				when "1001" =>	Fi <= 512;	f <= 10;		-- 5MHz
 				when "1010" =>	Fi <= 768;	f <= 14;		-- 7.5MHz
@@ -96,32 +92,22 @@ begin
 		variable CLK_DIV	: integer :=0;	--! Clock Division Integer
 	begin
 		if EN = '1' then
-			if rising_edge(CLK_S) then 
+			if rising_edge(CLK_IN) then 
 				CLK_DIV := CLK_DIV + 1;
 				if	CLK_DIV = f then
 					CLK_DIV := 0;
 					CLK <= not CLK;
 				end if;
 			end if;
+			
 		elsif	EN= '0' then
 			CLK_DIV := 0;
 			CLK <=	'0';
 		end if; 
 	end process run;
 	
---	process(CLK_IN, CLK_24MHz, CLK_27MHz, CLK_50MHz)
---	begin
---	if Fi_Di(7 downto 4) = "0001" or Fi_Di(7 downto 4) = "0011" then
---		CLK_S <= CLK_IN;
---	elsif	Fi_Di(7 downto 4) = "0000" or Fi_Di(7 downto 4) ="0010" or 
---			Fi_Di(7 downto 4) ="0100" then
---				CLK_S <= CLK_24MHz;
---	else
---				CLK_S <= '0';
---	end if;
---	end process;
+
 	
-	CLK_S  	<= CLK_IN;
-	CLK_OUT 	<= CLK;
+	CLK_OUT <= CLK;
 	
 end architecture;

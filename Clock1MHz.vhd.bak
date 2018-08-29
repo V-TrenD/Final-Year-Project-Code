@@ -1,4 +1,4 @@
--- DIV2
+-- 1MHz Clock
 --! Use standard library
 library ieee;
 --! Use logic elements

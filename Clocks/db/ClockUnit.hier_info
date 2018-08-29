@@ -1,0 +1,47 @@
+|ClockUnit
+CLK <= DIV_N:inst.CLK_OUT
+CLK_1 => DIV_N:inst.CLK_IN
+_CLK <= <GND>
+CLK_2 => ~NO_FANOUT~
+CLK_3 => ~NO_FANOUT~
+CLK_4 => ~NO_FANOUT~
+EN => ~NO_FANOUT~
+
+
+|ClockUnit|DIV_N:inst
+CLK_IN => CLK.CLK
+CLK_IN => count[0].CLK
+CLK_IN => count[1].CLK
+CLK_IN => count[2].CLK
+CLK_IN => count[3].CLK
+CLK_IN => count[4].CLK
+CLK_IN => count[5].CLK
+CLK_IN => count[6].CLK
+CLK_IN => count[7].CLK
+CLK_IN => count[8].CLK
+CLK_IN => count[9].CLK
+CLK_IN => count[10].CLK
+CLK_IN => count[11].CLK
+CLK_IN => count[12].CLK
+CLK_IN => count[13].CLK
+CLK_IN => count[14].CLK
+CLK_IN => count[15].CLK
+CLK_IN => count[16].CLK
+CLK_IN => count[17].CLK
+CLK_IN => count[18].CLK
+CLK_IN => count[19].CLK
+CLK_IN => count[20].CLK
+CLK_IN => count[21].CLK
+CLK_IN => count[22].CLK
+CLK_IN => count[23].CLK
+CLK_IN => count[24].CLK
+CLK_IN => count[25].CLK
+CLK_IN => count[26].CLK
+CLK_IN => count[27].CLK
+CLK_IN => count[28].CLK
+CLK_IN => count[29].CLK
+CLK_IN => count[30].CLK
+CLK_IN => count[31].CLK
+CLK_OUT <= CLK.DB_MAX_OUTPUT_PORT_TYPE
+
+
