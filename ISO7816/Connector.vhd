@@ -15,6 +15,7 @@ entity Connector is
 		IO_RX		: in		std_logic;
 		IO_TX		: out 	std_logic;
 		R_W		: in		std_logic;
+		EN			: in		std_logic:='0';
 		
 		C1			: out 	std_logic;  -- VDD Pin
 		C2			: out 	std_logic;  -- Reset line
@@ -37,8 +38,11 @@ architecture behave of Connector is
 	end process;
 	
 	CARDIN 	<= CARD;
-	C1 		<= VDD;
-	C2			<= RESET;
-	C3			<= CLK;
+	C1 		<= VDD when EN = '1' else 
+					'Z';
+	C2			<= RESET when EN = '1' else
+					'Z';
+	C3			<= CLK when EN = '1' else
+					'Z';
 	
 end behave;

@@ -38,7 +38,7 @@ for n, (portname, desc, hwid) in enumerate(sorted(serial.tools.list_ports.compor
     if (hwid[4:21] == "VID:PID=067B:2303") and ("55" in portname):
         device = portname
 
-device="COM22"
+device = "COM63"
 print portname, device
 
 ser = serial.Serial(
@@ -132,10 +132,11 @@ def ATR(B):
             print "\t\tT%c2 is absent" % (0x41 + i)
     
     return 0
+# The PSE Way...
+EMV_SELECT_PSE = [0x00, 0xA4 , 0x04 , 0x00 , 0x0E , 0x31 , 0x50 , 0x41 , 0x59 , 0x2E , 0x53 , 0x59 , 0x53 , 0x2E , 0x44 , 0x44 , 0x46 , 0x30 , 0x31 , 0x00]
+    
 
-
-
-if  True:
+if  False:
     while 1 :
         # get keyboard input
         input = raw_input(">> ")
@@ -149,19 +150,30 @@ if  True:
                 ATR(convert)
         elif "PTS" in input:
             ser.write([0xFF, 0x10, 0x11, 0xFE])
-            #ser.write("HelloWorld\0")
-            #ser.write(0x10)
-            #ser.write(0x11)
-            #ser.write(0xFE)
+            # ser.write("HelloWorld\0")
+            # ser.write(0x10)
+            # ser.write(0x11)
+            # ser.write(0xFE)
     
         out = ""
 else:
     ATR_DUMMY = [0x3b, 0x6e, 0x00, 0x00, 0x80, 0x31,
                  0x80, 0x66, 0xb0, 0x84, 0x0c, 0x01,
                  0x6e, 0x01 , 0x83 , 0x00 , 0x90 , 0x00]
-    
-    ATR(ATR_DUMMY)
-    HistoricalBytes(ATR_DUMMY)
+    print "Writing ", EMV_SELECT_PSE
+    i = 0
+    j = 0
+    while(j < len(EMV_SELECT_PSE)):
+        while(i < 50000):
+            i += 1
+        
+        ser.write([EMV_SELECT_PSE[j % len(EMV_SELECT_PSE)]])  # EMV_SELECT_PSE)
+        j += 1
+        i = 0
+        print "P", EMV_SELECT_PSE[j % len(EMV_SELECT_PSE)], "%c"%EMV_SELECT_PSE[j % len(EMV_SELECT_PSE)]
+    print "Done     "
+    # ATR(ATR_DUMMY)
+    # HistoricalBytes(ATR_DUMMY)
 
 
 out = "hello"
