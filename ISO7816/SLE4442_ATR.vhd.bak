@@ -1,0 +1,70 @@
+
+
+
+-- Commonly imported packages:
+
+	-- STD_LOGIC and STD_LOGIC_VECTOR types, and relevant functions
+	use ieee.std_logic_1164.all;
+
+	-- SIGNED and UNSIGNED types, and relevant functions
+	use ieee.numeric_std.all;
+
+	-- Basic sequential functions and concurrent procedures
+	use ieee.VITAL_Primitives.all;
+
+	-- Library of Parameterized Modules: 
+	-- customizable, device-independent logic functions
+	use lpm.lpm_components.all;
+
+	-- Altera Megafunctions
+	use altera_mf.altera_mf_components.all;
+	
+	entity <entity_name> is
+	generic
+	(
+		<name>	: <type>  :=	<default_value>;
+		...
+		<name>	: <type>  :=	<default_value>
+	);
+
+
+	port
+	(
+		-- Input ports
+		<name>	: in  <type>;
+		<name>	: in  <type> := <default_value>;
+
+		-- Inout ports
+		<name>	: inout <type>;
+
+		-- Output ports
+		<name>	: out <type>;
+		<name>	: out <type> := <default_value>
+	);
+end <entity_name>;
+
+
+-- Library Clause(s) (optional)
+-- Use Clause(s) (optional)
+
+architecture <arch_name> of <entity_name> is
+
+	-- Declarations (optional)
+
+begin
+
+	-- Process Statement (optional)
+
+	-- Concurrent Procedure Call (optional)
+
+	-- Concurrent Signal Assignment (optional)
+
+	-- Conditional Signal Assignment (optional)
+
+	-- Selected Signal Assignment (optional)
+
+	-- Component Instantiation Statement (optional)
+
+	-- Generate Statement (optional)
+
+end <arch_name>;
