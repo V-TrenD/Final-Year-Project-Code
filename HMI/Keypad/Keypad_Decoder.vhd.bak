@@ -1,0 +1,12 @@
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
+entity Keypad_Decoder is
+	port 
+	(
+		data	: in unsigned (7 downto 0);
+		SSD_H : out std_logic_vector(6 downto 0);
+		SSD_L : out std_logic_vector(6 downto 0)
+	);
+end entity;

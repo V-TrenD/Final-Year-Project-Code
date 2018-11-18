@@ -28,7 +28,7 @@ library ieee;
 		
 		-- Inout ports
 		CARD_IO	: inout std_logic:='Z';
-		DATA		: inout std_logic_vector:="ZZZZZZZZ";
+		DATA		: inout std_logic_vector(7 downto 0):="ZZZZZZZZ";
 		
 		-- Output ports
 		CARD_RST	: out std_logic:='Z';
