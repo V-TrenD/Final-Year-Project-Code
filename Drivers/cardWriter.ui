@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>457</width>
-    <height>545</height>
+    <height>586</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -25,12 +25,40 @@
     </widget>
    </item>
    <item row="0" column="1">
-    <widget class="QLineEdit" name="lineEdit">
+    <widget class="QLineEdit" name="holder">
      <property name="text">
       <string/>
      </property>
      <property name="maxLength">
       <number>16</number>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QLabel" name="label_10">
+     <property name="text">
+      <string>ATR</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1">
+    <widget class="QLabel" name="label_ATR">
+     <property name="text">
+      <string>0xA2131091</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0">
+    <widget class="QLabel" name="label_12">
+     <property name="text">
+      <string>Man ID</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="1">
+    <widget class="QLabel" name="label_ManID">
+     <property name="text">
+      <string>0xFFFF8115</string>
      </property>
     </widget>
    </item>
@@ -69,6 +97,13 @@
      </property>
     </widget>
    </item>
+   <item row="5" column="1">
+    <widget class="QLabel" name="label_PIN">
+     <property name="text">
+      <string>0xFFFFFF</string>
+     </property>
+    </widget>
+   </item>
    <item row="9" column="0" colspan="2">
     <widget class="Line" name="line">
      <property name="orientation">
@@ -100,9 +135,9 @@
        </widget>
       </item>
       <item row="0" column="1">
-       <widget class="QLabel" name="label_5">
+       <widget class="QLabel" name="label_AppKey">
         <property name="text">
-         <string>0xA19A7086D40F0545D8A19DC95769A0F8</string>
+         <string>0x</string>
         </property>
        </widget>
       </item>
@@ -184,7 +219,7 @@
       <item row="1" column="1">
        <widget class="QLineEdit" name="uppay_pin">
         <property name="text">
-         <string>1234</string>
+         <string>FFFFFF</string>
         </property>
         <property name="maxLength">
          <number>6</number>
@@ -193,8 +228,7 @@
       </item>
      </layout>
      <zorder>paysavings</zorder>
-     <zorder>paysavings</zorder>
-     <zorder>label_5</zorder>
+     <zorder>label_AppKey</zorder>
      <zorder>label_6</zorder>
      <zorder>paysavingsvalue</zorder>
      <zorder>paycheque</zorder>
@@ -233,7 +267,7 @@
       <item row="0" column="1">
        <widget class="QLabel" name="label_7">
         <property name="text">
-         <string>0xA19A7086D40F0545D8A19DC95769A0F8</string>
+         <string>0x</string>
         </property>
        </widget>
       </item>
@@ -291,12 +325,114 @@
      </layout>
     </widget>
    </item>
-   <item row="13" column="1">
-    <widget class="QPushButton" name="save">
-     <property name="text">
-      <string>Save</string>
-     </property>
-    </widget>
+   <item row="14" column="1">
+    <layout class="QGridLayout" name="gridLayout_2">
+     <item row="3" column="2">
+      <widget class="QPushButton" name="reset">
+       <property name="text">
+        <string>Reset</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="2">
+      <widget class="QRadioButton" name="classA">
+       <property name="text">
+        <string>Class A</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="2">
+      <widget class="QPushButton" name="unlock">
+       <property name="text">
+        <string>Unlock</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QRadioButton" name="off">
+       <property name="text">
+        <string>OFF</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="QPushButton" name="load">
+       <property name="text">
+        <string>Read</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="3">
+      <widget class="QPushButton" name="save">
+       <property name="text">
+        <string>Save</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="3">
+      <widget class="QPushButton" name="savespeed">
+       <property name="text">
+        <string>Write Speed</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="1">
+      <widget class="QPushButton" name="loadspeed">
+       <property name="text">
+        <string>Read Speed</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="3">
+      <widget class="QRadioButton" name="classB">
+       <property name="text">
+        <string>Class B</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QPushButton" name="readerlink">
+       <property name="text">
+        <string>Connect</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="3">
+      <widget class="QPushButton" name="readerunlink">
+       <property name="text">
+        <string>Disconnect</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="2">
+      <widget class="QPushButton" name="pinbutton">
+       <property name="text">
+        <string>Get Pin</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="3">
+      <widget class="QPushButton" name="STORE">
+       <property name="text">
+        <string>STORE</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QPushButton" name="LOAD">
+       <property name="text">
+        <string>LOAD</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="2">
+      <widget class="QPushButton" name="DELETE">
+       <property name="text">
+        <string>Delete</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </item>
   </layout>
  </widget>
